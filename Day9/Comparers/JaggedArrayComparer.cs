@@ -14,7 +14,7 @@
         /// <param name="nullOrEmptyComparer">The null or empty comparer.</param>
         protected JaggedArrayComparer(NullAndEmptyComparer nullOrEmptyComparer)
         {
-            this.NullOrEmptyComparer = nullOrEmptyComparer;
+            this.nullOrEmptyComparer = nullOrEmptyComparer;
         }
 
         /// <summary>
@@ -23,7 +23,7 @@
         /// <value>
         /// The null or empty comparer.
         /// </value>
-        protected NullAndEmptyComparer NullOrEmptyComparer { get; }
+        private readonly NullAndEmptyComparer nullOrEmptyComparer;
 
         /// <inheritdoc />
         /// <summary>
@@ -39,7 +39,7 @@
         /// </returns>
         public int Compare(int[] x, int[] y)
         {
-            int nullOrEmptyComparison = this.NullOrEmptyComparer.Compare(x, y);
+            int nullOrEmptyComparison = this.nullOrEmptyComparer.Compare(x, y);
 
             if (nullOrEmptyComparison != (int)NullOrEmptyComparisonResult.NoNullsAndEmpties)
             {
