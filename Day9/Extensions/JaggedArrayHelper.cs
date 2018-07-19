@@ -25,15 +25,60 @@
         }
 
         /// <summary>
+        /// Bubbles the sort.
+        /// </summary>
+        /// <param name="jaggedArray">The jagged array.</param>
+        /// <param name="compare">The compare.</param>
+        /// <exception cref="ArgumentNullException">
+        /// throws when jagged array or compare is null
+        /// </exception>
+        public static void BubbleSort(this int[][] jaggedArray, Comparison<int[]> compare)
+        {
+            jaggedArray.BubbleSort(compare, 0);
+        }
+
+        /// <summary>
+        /// Bubbles the sort.
+        /// </summary>
+        /// <param name="jaggedArray">The jagged array.</param>
+        /// <param name="compare">The compare.</param>
+        /// <param name="index">The index.</param>
+        /// <exception cref="ArgumentNullException">throws when jagged array or compare is null</exception>
+        /// /// <exception cref="ArgumentOutOfRangeException">
+        /// index is out of bounds
+        /// </exception>
+        public static void BubbleSort(this int[][] jaggedArray, Comparison<int[]> compare, int index)
+        {
+            ValidateIsNull(jaggedArray);
+            jaggedArray.BubbleSort(compare, index, jaggedArray.Length);
+        }
+
+        /// <summary>
+        /// Bubbles the sort.
+        /// </summary>
+        /// <param name="jaggedArray">The jagged array.</param>
+        /// <param name="compare">The compare.</param>
+        /// <param name="index">The index.</param>
+        /// <param name="length">The length.</param>
+        /// <exception cref="ArgumentNullException">throws when jagged array or compare is null</exception>
+        /// /// <exception cref="ArgumentOutOfRangeException">
+        /// index or length is out of bounds
+        /// </exception>
+        public static void BubbleSort(this int[][] jaggedArray, Comparison<int[]> compare, int index, int length)
+        {
+            ValidateIsNull(compare);
+            jaggedArray.BubbleSort(Comparer<int[]>.Create(compare), index, length);
+        }
+
+        /// <summary>
         /// Sorts arrays inside of integer jagged array by preset comparer
         /// </summary>
         /// <param name="jaggedArray">The jagged array.</param>
         /// <param name="comparer">The comparer.</param>
         /// <exception cref="ArgumentNullException">throws when jagged array or comparer is null</exception>
-        public static void BubbleSort(this int[][] jaggedArray, IComparer<int[]> comparer)
+    public static void BubbleSort(this int[][] jaggedArray, IComparer<int[]> comparer)
         {
-            ValidateIsNull(jaggedArray);
-            jaggedArray.BubbleSort(comparer, 0, jaggedArray.Length);
+            jaggedArray.BubbleSort(comparer, 0);
         }
 
         /// <summary>
@@ -55,12 +100,19 @@
 
             for (int i = index; i < index + length; i++)
             {
-                for (int j = 0; j < jaggedArray.Length - 1; j++)
+                bool swapped = false;
+                for (int j = 0; j < jaggedArray.Length - i - 1; j++)
                 {
                     if (comparer.Compare(jaggedArray[j], jaggedArray[j + 1]) > 0)
                     {
                         Swap(ref jaggedArray[j], ref jaggedArray[j + 1]);
+                        swapped = true;
                     }
+                }
+
+                if (!swapped)
+                {
+                    break;
                 }
             }
         }
