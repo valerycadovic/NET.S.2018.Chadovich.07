@@ -1,4 +1,4 @@
-﻿namespace Day9
+﻿namespace Day9.Tests.Internals
 {
     /// <summary>
     /// Result of arrays comparison of empty arrays and nulls

@@ -1,5 +1,7 @@
-﻿namespace Day9
+﻿namespace Day9.Tests.Comparers
 {
+    using Day9.Tests.Internals;
+
     /// <inheritdoc />
     /// <summary>
     /// Defines an order of nulls and empty arrays comparison

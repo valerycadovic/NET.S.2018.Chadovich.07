@@ -1,25 +1,26 @@
-﻿namespace Day9
+﻿namespace Day9.Tests.Comparers
 {
     /// <inheritdoc />
     /// <summary>
-    /// Compares two arrays by their min values
+    /// Compares two arrays by their max values
     /// </summary>
     /// <seealso cref="T:Day9.JaggedArrayComparer" />
-    public class MinValueComparer : JaggedArrayComparer
+    public class MaxValueComparer : JaggedArrayComparer
     {
+        /// <inheritdoc />
         /// <summary>
-        /// Initializes a new instance of the <see cref="MinValueComparer"/> class.
+        /// Initializes a new instance of the <see cref="T:Day9.MaxValueComparer" /> class.
         /// </summary>
-        public MinValueComparer() : this(new NullBiggerThanEmptyComparer())
+        public MaxValueComparer() : this(new NullBiggerThanEmptyComparer())
         {
         }
 
         /// <inheritdoc />
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Day9.MinValueComparer" /> class.
+        /// Initializes a new instance of the <see cref="T:Day9.MaxValueComparer" /> class.
         /// </summary>
         /// <param name="nullOrEmptyComparer">The null or empty comparer.</param>
-        public MinValueComparer(NullAndEmptyComparer nullOrEmptyComparer) : base(nullOrEmptyComparer)
+        public MaxValueComparer(NullAndEmptyComparer nullOrEmptyComparer) : base(nullOrEmptyComparer)
         {
         }
 
@@ -37,7 +38,7 @@
 
             for (int i = 1; i < array.Length; i++)
             {
-                if (array[i] < result)
+                if (array[i] > result)
                 {
                     result = array[i];
                 }

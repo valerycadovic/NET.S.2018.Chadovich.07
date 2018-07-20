@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using Day9.Tests.Comparers;
 using NUnit.Framework;
 
 namespace Day9.Tests

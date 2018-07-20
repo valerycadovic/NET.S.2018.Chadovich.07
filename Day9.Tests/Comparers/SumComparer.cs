@@ -1,4 +1,4 @@
-﻿namespace Day9
+﻿namespace Day9.Tests.Comparers
 {
     /// <inheritdoc />
     /// <summary>
