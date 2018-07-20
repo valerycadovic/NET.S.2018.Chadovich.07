@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using NUnit.Framework;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Day9.Extensions;
 using Day9.Tests.Comparers;
+using NUnit.Framework;
 
-namespace Day9.Tests
+namespace Day9.Tests.JaggedArray_ExtensionsTests
 {
     [TestFixture]
-    public class JaggedArrayHelper_Tests
+    public class JaggedArrayDelegateHelper_Tests
     {
         [Test]
-        public void Can_BubbleSort_By_Sums_Ascending()
+        public void Can_Sort_By_Sums_Ascending()
         {
             int[][] actual = new int[8][];
 
@@ -34,13 +38,13 @@ namespace Day9.Tests
             expected[7] = actual[6];
 
             IComparer<int[]> comparer = new SumComparer();
-            actual.BubbleSort(comparer);
+            actual.Sort(comparer);
 
             CollectionAssert.AreEqual(expected, actual);
         }
 
         [Test]
-        public void Can_BubbleSort_By_Sums_Ascending_Via_Delegate()
+        public void Can_Sort_By_Sums_Ascending_Via_Delegate()
         {
             int[][] actual = new int[8][];
 
@@ -66,7 +70,7 @@ namespace Day9.Tests
 
             // call delegate method with interface method
             IComparer<int[]> comparer = new SumComparer();
-            actual.BubbleSort((a, b) => comparer.Compare(a, b));
+            actual.Sort((a, b) => comparer.Compare(a, b));
 
             CollectionAssert.AreEqual(expected, actual);
         }
@@ -97,7 +101,7 @@ namespace Day9.Tests
             expected[7] = actual[6];
 
             IComparer<int[]> comparer = new MaxValueComparer();
-            actual.BubbleSort(comparer);
+            actual.Sort(comparer);
 
             CollectionAssert.AreEqual(expected, actual);
         }
@@ -128,22 +132,22 @@ namespace Day9.Tests
             expected[7] = actual[6];
 
             IComparer<int[]> comparer = new MinValueComparer();
-            actual.BubbleSort(comparer);
+            actual.Sort(comparer);
 
             CollectionAssert.AreEqual(expected, actual);
         }
 
         [Test]
         public void BubbleSort_Throws_ArgumentNullException_If_JaggedArray_Is_Null() =>
-            Assert.Throws<ArgumentNullException>(() => JaggedArrayHelper.BubbleSort(null, new MaxValueComparer()));
+            Assert.Throws<ArgumentNullException>(() => JaggedArrayDelegateHelper.Sort(null, new MaxValueComparer()));
 
         [Test]
         public void BubbleSort_Throws_ArgumentNullException_If_Comparer_Is_Null() =>
-            Assert.Throws<ArgumentNullException>(() => new int[1][].BubbleSort((IComparer<int[]>)null));
+            Assert.Throws<ArgumentNullException>(() => new int[1][].Sort((IComparer<int[]>)null));
 
         [Test]
         public void BubbleSort_Throws_ArgumentNullException_If_Comparison_Is_Null() =>
-            Assert.Throws<ArgumentNullException>(() => new int[1][].BubbleSort((Comparison<int[]>)null));
+            Assert.Throws<ArgumentNullException>(() => new int[1][].Sort((Comparison<int[]>)null));
 
         [TestCase(-1, 10)]
         [TestCase(1, 15)]
@@ -155,12 +159,13 @@ namespace Day9.Tests
             {
                 int[][] actual = new int[3][];
 
-                actual[0] = new int[] { 1, 3, 4, 5, 6 };            
-                actual[1] = new int[] { -7, 7, 3, 7, 7, 12, 4 };    
+                actual[0] = new int[] { 1, 3, 4, 5, 6 };
+                actual[1] = new int[] { -7, 7, 3, 7, 7, 12, 4 };
                 actual[2] = new int[] { 3 };
 
-                actual.BubbleSort(new MaxValueComparer(), index, length);
+                actual.Sort(new MaxValueComparer(), index, length);
             });
         }
+
     }
 }

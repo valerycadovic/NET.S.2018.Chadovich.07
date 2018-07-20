@@ -1,4 +1,4 @@
-﻿namespace Day9
+﻿namespace Day9.Extensions
 {
     using System;
     using System.Collections.Generic;
@@ -6,26 +6,62 @@
     /// <summary>
     /// Jagged Array Extension Methods
     /// </summary>
-    public static class JaggedArrayHelper
+    public static class JaggedArrayInterfaceHelper
     {
         /// <summary>
         /// Sorts arrays inside of integer jagged array by preset comparer
         /// </summary>
         /// <param name="jaggedArray">The jagged array.</param>
-        /// <param name="comparer">The comparer.</param>
-        /// <param name="index">The start index.</param>
-        /// <exception cref="ArgumentNullException">throws when jagged array or comparer is null</exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// index is out of bounds
-        /// </exception>
-        public static void BubbleSort(this int[][] jaggedArray, IComparer<int[]> comparer, int index)
+        /// <param name="compare">The compare.</param>
+        /// <exception cref="ArgumentNullException">throws when jagged array or compare is null</exception>
+        public static void BubbleSortFunc(this int[][] jaggedArray, Func<int[], int[], int> compare)
         {
             ValidateIsNull(jaggedArray);
-            jaggedArray.BubbleSort(comparer, index, jaggedArray.Length);
+
+            IComparer<int[]> comparer = new FuncMethodAdapter(compare);
+
+            jaggedArray.BubbleSort(comparer, 0);
         }
 
         /// <summary>
-        /// Bubbles the sort.
+        /// Sorts arrays inside of integer jagged array by preset comparer
+        /// </summary>
+        /// <param name="jaggedArray">The jagged array.</param>
+        /// <param name="compare">The compare.</param>
+        /// <param name="index">The index.</param>
+        /// <exception cref="ArgumentNullException">throws when jagged array or compare is null</exception>
+        /// /// <exception cref="ArgumentOutOfRangeException">
+        /// index is out of bounds
+        /// </exception>
+        public static void BubbleSortFunc(this int[][] jaggedArray, Func<int[], int[], int> compare, int index)
+        {
+            ValidateIsNull(jaggedArray);
+
+            IComparer<int[]> comparer = new FuncMethodAdapter(compare);
+
+            jaggedArray.BubbleSort(comparer, index, jaggedArray.Length - index);
+        }
+
+        /// <summary>
+        /// Sorts arrays inside of integer jagged array by preset comparer
+        /// </summary>
+        /// <param name="jaggedArray">The jagged array.</param>
+        /// <param name="compare">The compare.</param>
+        /// <param name="index">The index.</param>
+        /// <param name="length">The length.</param>
+        /// <exception cref="ArgumentNullException">throws when jagged array or compare is null</exception>
+        /// /// <exception cref="ArgumentOutOfRangeException">
+        /// index or length is out of bounds
+        /// </exception>
+        public static void BubbleSortFunc(this int[][] jaggedArray, Func<int[], int[], int> compare, int index, int length)
+        {
+            IComparer<int[]> comparer = new FuncMethodAdapter(compare);
+
+            jaggedArray.BubbleSort(comparer, index, length);
+        }
+
+        /// <summary>
+        /// Sorts arrays inside of integer jagged array by preset comparer
         /// </summary>
         /// <param name="jaggedArray">The jagged array.</param>
         /// <param name="compare">The compare.</param>
@@ -38,7 +74,7 @@
         }
 
         /// <summary>
-        /// Bubbles the sort.
+        /// Sorts arrays inside of integer jagged array by preset comparer
         /// </summary>
         /// <param name="jaggedArray">The jagged array.</param>
         /// <param name="compare">The compare.</param>
@@ -50,11 +86,11 @@
         public static void BubbleSort(this int[][] jaggedArray, Comparison<int[]> compare, int index)
         {
             ValidateIsNull(jaggedArray);
-            jaggedArray.BubbleSort(compare, index, jaggedArray.Length);
+            jaggedArray.BubbleSort(compare, index, jaggedArray.Length - index);
         }
 
         /// <summary>
-        /// Bubbles the sort.
+        /// Sorts arrays inside of integer jagged array by preset comparer
         /// </summary>
         /// <param name="jaggedArray">The jagged array.</param>
         /// <param name="compare">The compare.</param>
@@ -76,9 +112,25 @@
         /// <param name="jaggedArray">The jagged array.</param>
         /// <param name="comparer">The comparer.</param>
         /// <exception cref="ArgumentNullException">throws when jagged array or comparer is null</exception>
-    public static void BubbleSort(this int[][] jaggedArray, IComparer<int[]> comparer)
+        public static void BubbleSort(this int[][] jaggedArray, IComparer<int[]> comparer)
         {
             jaggedArray.BubbleSort(comparer, 0);
+        }
+
+        /// <summary>
+        /// Sorts arrays inside of integer jagged array by preset comparer
+        /// </summary>
+        /// <param name="jaggedArray">The jagged array.</param>
+        /// <param name="comparer">The comparer.</param>
+        /// <param name="index">The start index.</param>
+        /// <exception cref="ArgumentNullException">throws when jagged array or comparer is null</exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// index is out of bounds
+        /// </exception>
+        public static void BubbleSort(this int[][] jaggedArray, IComparer<int[]> comparer, int index)
+        {
+            ValidateIsNull(jaggedArray);
+            jaggedArray.BubbleSort(comparer, index, jaggedArray.Length - index);
         }
 
         /// <summary>
@@ -162,6 +214,46 @@
             if (obj is null)
             {
                 throw new ArgumentNullException($"{nameof(obj)}");
+            }
+        }
+
+        /// <inheritdoc />
+        /// <summary>
+        /// Adapter classs for <see cref="Func{int[], int[], int}"/> compatibility with <see cref="IComparer{int[]}"/>
+        /// </summary>
+        /// <seealso cref="T:System.Collections.Generic.IComparer`1" />
+        private class FuncMethodAdapter : IComparer<int[]>
+        {
+            /// <summary>
+            /// The adaptee.
+            /// </summary>
+            private readonly Func<int[], int[], int> compare;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="FuncMethodAdapter"/> class.
+            /// </summary>
+            /// <param name="func">The adaptee function.</param>
+            /// <exception cref="ArgumentNullException">Throws when func is null</exception>
+            public FuncMethodAdapter(Func<int[], int[], int> func)
+            {
+                this.compare = func ?? throw new ArgumentNullException($"{nameof(func)} is null");
+            }
+
+            /// <inheritdoc />
+            /// <summary>
+            /// Compares two objects and returns a value indicating whether one is less than, equal to, or greater than the other.
+            /// </summary>
+            /// <param name="x">The first object to compare.</param>
+            /// <param name="y">The second object to compare.</param>
+            /// <returns>
+            /// A signed integer that indicates the relative values of <paramref name="x" /> and <paramref name="y" />, as shown in the following table.Value Meaning Less than zero
+            /// <paramref name="x" /> is less than <paramref name="y" />.Zero
+            /// <paramref name="x" /> equals <paramref name="y" />.Greater than zero
+            /// <paramref name="x" /> is greater than <paramref name="y" />.
+            /// </returns>
+            public int Compare(int[] x, int[] y)
+            {
+                return compare(x, y);
             }
         }
     }

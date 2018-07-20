@@ -1,6 +1,7 @@
 ﻿namespace Day9.Tests.Comparers
 {
     using System.Collections.Generic;
+    using Day9.Tests.Internals;
 
     /// <summary>
     /// Defines base arrays comparison template
